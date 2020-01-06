@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+// config for keylookup
+package adapter.keylookup.config;
+
+import "google/protobuf/duration.proto";
+import "gogoproto/gogo.proto";
+
+option go_package="config";
+
+// config for keylookup
+message Params {
+    google.protobuf.Duration valid_duration = 1 [(gogoproto.nullable)=false, (gogoproto.stdduration) = true];
+    repeated LookupMap map = 2;
+}
+
+message LookupMap {
+  string key = 1;
+  repeated string values = 2;
+}

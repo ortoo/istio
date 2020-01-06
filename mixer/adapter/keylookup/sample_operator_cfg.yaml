@@ -1,0 +1,49 @@
+# handler for adapter mygrpcadapter
+apiVersion: "config.istio.io/v1alpha2"
+kind: handler
+metadata:
+  name: h1
+  namespace: istio-system
+spec:
+  adapter: keylookup
+  connection:
+    address: "{ADDRESS}" #replaces at runtime by the test
+  params:
+    valid_duration: 5s
+    map:
+      - key: testkey
+        values:
+          - testval1
+          - testval2
+          - testval3
+      - key: secondkey
+        values:
+          - second1
+          - second2
+          - second3
+          - second4
+---
+# instance for template metric
+apiVersion: "config.istio.io/v1alpha2"
+kind: instance
+metadata:
+  name: i1
+  namespace: istio-system
+spec:
+  template: keylookup
+  params:
+    entry: request.host | "unknown"
+---
+# rule to dispatch to handler h1
+apiVersion: "config.istio.io/v1alpha2"
+kind: rule
+metadata:
+  name: r1
+  namespace: istio-system
+spec:
+  actions:
+    - handler: h1.istio-system
+      instances:
+        - i1
+---
+
